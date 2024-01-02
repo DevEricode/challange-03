@@ -8,7 +8,7 @@ class DatabaseConnection {
     public async connect() {
         try {
             await mongoose.connect(this.uri);
-            console.log('Connected to the bank!');
+            console.log('Connected to the database!');
         } catch (exception) {
             console.error('Error connecting to the database', exception);
         }
