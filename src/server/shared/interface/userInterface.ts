@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
 
 interface User extends Document {
-    firstname: string;
+    firstName: string;
     lastName: string;
-    birthDate: number;
+    birthDate: string;
     city: string;
     country: string;
     email: string;

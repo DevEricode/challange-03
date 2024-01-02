@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { nameRegex, dateRegex, addressRegex, emailRegex, passwordRegex } from './userRegex';
+import { nameRegex, addressRegex, emailRegex, passwordRegex, dateRegex } from './userRegex';
 
 
 export const createUser = Joi.object({
