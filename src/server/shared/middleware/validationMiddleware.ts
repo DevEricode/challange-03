@@ -1,19 +1,16 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import Joi from 'joi';
-import ApplicationError from '../errors/aplicationError';
+import { ObjectSchema } from 'joi';
+import { Request, Response, NextFunction } from 'express';
 
-export function validationSchemaMiddleware(schema: Joi.Schema): RequestHandler {
+
+export const validateSchemas = (schema: ObjectSchema) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const { error } = schema.validate(req.body, { abortEarly: false });
+        const { error } = schema.validate(req.body);
+
         if (error) {
-            const errors = error.details.map((detail) => detail.message);
-            throw new ApplicationError(
-                400,
-                errors.toString().replace(/"/g, '\''),
-                'VALIDATION_ERRORS',
-                400,
-            );
+            const errorMessage = error.details.map((detail) => detail.message).join(', ');
+            return res.status(400).json({ error: errorMessage });
         }
+
         next();
     };
-}
+};
