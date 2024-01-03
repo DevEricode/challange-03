@@ -10,7 +10,7 @@ const Event = model('Event', eventSchema, collectionName);
 
 class getEventsByDayController {
     async getEventsByDay(req: Request, res: Response): Promise<Response> {
-        const dayOfWeek = req.params.dayOfWeek;
+        const dayOfWeek = req.query.dayOfWeek;
 
         const token = req.headers.authorization;
         if (!token) {
