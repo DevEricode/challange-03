@@ -28,6 +28,7 @@ class SignUpController {
 
         try {
             const emailExists = await User.findOne({ email: userData.email });
+            
             if (emailExists) {
                 return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Email already in use.' });
             }
