@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-// import jwt, { JwtPayload } from 'jsonwebtoken';
 import eventSchema from '../../shared/models/eventSchema';
 import { model } from 'mongoose';
 
@@ -12,19 +11,12 @@ class getEventsByDayController {
     async getEventsByDay(req: Request, res: Response): Promise<Response> {
         const dayOfWeek = req.query.dayOfWeek;
 
-        const token = req.headers.authorization;
-        if (!token) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized.' });
-        }
-
-        let userId;
-
         if (!dayOfWeek || typeof dayOfWeek !== 'string') {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid data supplied.' });
         }
 
         try {
-            const events = await Event.find({ dayOfWeek, userId });
+            const events = await Event.find({ dayOfWeek });
             if (events.length === 0) {
                 return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
             }
