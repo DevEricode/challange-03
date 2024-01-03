@@ -5,6 +5,9 @@ import { eventsController } from '../controllers/events/EventsController';
 import { validateSchemas } from '../shared/middleware/validationMiddleware';
 import { createUser } from '../shared/validation/users/userValidation';
 import { createEvent } from '../shared/validation/events/eventValidation';
+import validateJWT from '../shared/middleware/userIsAuthorized';
+
+
 
 const router = Router();
 
@@ -15,10 +18,10 @@ router.get('/', (req, res) => {
 router.post('/users/sign-in',usersController.signIn);
 router.post('/users/sign-up',validateSchemas(createUser), usersController.signUp);
 
-router.post('/events', validateSchemas(createEvent),eventsController.createEvent);
-router.get('/events', eventsController.getAllEvents);
+router.post('/events', validateJWT, validateSchemas(createEvent), eventsController.createEvent);
+router.get('/events/:dayOfWeek', validateJWT, eventsController.getEventsByDay);
 router.get('/events/:id', eventsController.getEventById);
-router.delete('/events/:day', eventsController.deleteEventByDay);
+router.delete('/events/:dayOfWeek', eventsController.deleteEventByDay);
 router.delete('/events/:id', eventsController.deleteEventId);
 
 export { router };
