@@ -21,7 +21,7 @@ class deleteEventsByDayController {
                 return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
             }
 
-            return res.status(StatusCodes.OK).json({ message: 'List of deleteDailyEvents', deletedEvents: events.deletedCount });
+            return res.status(StatusCodes.OK).json({ message: 'Event deleted successfully.' });
         } catch (error) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
         }
