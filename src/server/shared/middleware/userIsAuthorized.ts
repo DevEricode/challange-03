@@ -1,44 +1,31 @@
-import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-interface RequestWithUser extends Request {
-    userId: string;
+interface AuthenticatedRequest extends Request {
+    userId?: string;
 }
 
-class Authorization {
-    private secret: Secret;
+const validateJWT = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const token = req.headers['authorization'];
 
-    constructor(secret: Secret) {
-        this.secret = secret;
+    if (!token) {
+        return res.status(403).send({ auth: false, message: 'No token provided.' });
     }
 
-    userIsAuthorized(req: RequestWithUser, res: Response, next: NextFunction): Response | void {
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader) {
-            return res.status(401).json({ message: 'No token provided.' });
+    jwt.verify(token, process.env.SECRET as string, (err, decoded) => {
+        if (err) {
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         }
 
-        const parts = authHeader.split(' ');
+        const jwtPayload = decoded as JwtPayload;
 
-        if (parts.length !== 2) {
-            return res.status(401).json({ message: 'Token error.' });
+        if (jwtPayload) {
+            req.userId = jwtPayload.id;
+            next();
+        } else {
+            return res.status(500).send({ auth: false, message: 'Failed to decode token.' });
         }
+    });
+};
 
-        const [scheme, token] = parts;
-
-        if (!/^Bearer$/i.test(scheme)) {
-            return res.status(401).json({ message: 'Token malformatted.' });
-        }
-
-        try {
-            const decoded = jwt.verify(token, this.secret) as JwtPayload;
-            req.userId = decoded.id;
-            return next();
-        } catch (err) {
-            return res.status(401).json({ message: 'Token invalid.' });
-        }
-    }
-}
-
-export default new Authorization(process.env.SECRET as Secret);
+export default validateJWT;
