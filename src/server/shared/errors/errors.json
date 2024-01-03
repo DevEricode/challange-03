@@ -1,0 +1,40 @@
+{
+    "errors": [
+        {
+            "code": 1,
+            "message": "Customer not found.",
+            "type": "controller validation",
+            "http_code": 404
+        },
+        {
+            "code": 2,
+            "message": "CEP not found.",
+            "type": "axios api error",
+            "http_code": 401
+        },
+        {
+            "code": 3,
+            "message": "Error connecting to the database:",
+            "type": "database connection",
+            "http_code": 500
+        },
+        {
+            "code": 4,
+            "message": "Error disconnecting to the database:",
+            "type": "database connection",
+            "http_code": 500
+        },
+        {
+            "code": 5,
+            "message": "Invalid query params.",
+            "type": "controller validation",
+            "http_code": 400
+        },
+        {
+            "code": 6,
+            "message": "Invalid id format.",
+            "type": "controller validation",
+            "http_code": 400
+        }
+    ]
+}
