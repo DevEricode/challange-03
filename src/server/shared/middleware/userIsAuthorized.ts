@@ -6,15 +6,23 @@ interface AuthenticatedRequest extends Request {
 }
 
 const validateJWT = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization'];
+    const authHeader = req.headers['authorization'];
 
-    if (!token) {
-        return res.status(403).send({ auth: false, message: 'No token provided.' });
+    if (!authHeader) {
+        return res.status(403).json({ auth: false, message: 'No token provided.' });
     }
+
+    const token = authHeader.split(' ')[1];
 
     jwt.verify(token, process.env.SECRET as string, (err, decoded) => {
         if (err) {
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ auth: false, message: 'Token expired.' });
+            } else if (err.name === 'JsonWebTokenError') {
+                return res.status(401).json({ auth: false, message: 'Invalid token.' });
+            } else {
+                return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+            }
         }
 
         const jwtPayload = decoded as JwtPayload;
@@ -23,7 +31,7 @@ const validateJWT = (req: AuthenticatedRequest, res: Response, next: NextFunctio
             req.userId = jwtPayload.id;
             next();
         } else {
-            return res.status(500).send({ auth: false, message: 'Failed to decode token.' });
+            return res.status(500).json({ auth: false, message: 'Failed to decode token.' });
         }
     });
 };
