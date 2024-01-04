@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { EventService } from '../../shared/services/getEventsByDayService';
+import { EventService } from '../../shared/services/events/getEventsByDayService';
 
 class GetEventsByDayController {
     eventService: EventService;
 
     constructor(eventService: EventService) {
         this.eventService = eventService;
-    }
+    };
 
     async getEventsByDay(req: Request, res: Response): Promise<Response> {
         const dayOfWeek = req.query.dayOfWeek;
 
         if (!dayOfWeek || typeof dayOfWeek !== 'string') {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid data supplied.' });
-        }
+        };
 
         try {
             const events = await this.eventService.getEventsByDay(dayOfWeek);
@@ -23,10 +23,11 @@ class GetEventsByDayController {
             }
 
             return res.status(StatusCodes.OK).json({ message: 'Successful operation.', events });
+            
         } catch (error) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
-        }
-    }
-}
+        };
+    };
+};
 
 export const getEventsByDaysInstance = new GetEventsByDayController(new EventService());
