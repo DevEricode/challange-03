@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import eventSchema from '../../shared/models/eventSchema';
-import { model } from 'mongoose';
+import { EventService } from '../../shared/services/getEventsByDayService';
 
-const collectionName = process.env.DB_COLLECTION2 || 'collection_events';
+class GetEventsByDayController {
+    eventService: EventService;
 
-const Event = model('Event', eventSchema, collectionName);
+    constructor(eventService: EventService) {
+        this.eventService = eventService;
+    }
 
-class getEventsByDayController {
     async getEventsByDay(req: Request, res: Response): Promise<Response> {
         const dayOfWeek = req.query.dayOfWeek;
 
@@ -16,23 +17,16 @@ class getEventsByDayController {
         }
 
         try {
-            const events = await Event.find({ dayOfWeek });
+            const events = await this.eventService.getEventsByDay(dayOfWeek);
             if (events.length === 0) {
                 return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
             }
 
-            const responseBody = events.map(event => ({
-                id: event._id,
-                description: event.description,
-                dayOfWeek: event.dayOfWeek,
-                userId: event.userId,
-            }));
-
-            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', events: responseBody });
+            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', events });
         } catch (error) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
         }
     }
 }
 
-export const getEventsByDayInstance = new getEventsByDayController();
+export const getEventsByDaysInstance = new GetEventsByDayController(new EventService());
