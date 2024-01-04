@@ -1,38 +1,36 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import eventSchema from '../../shared/models/eventSchema';
-import { model } from 'mongoose';
+import { EventService } from '../../shared/services/getEventByIdService';
 
-const collectionName = process.env.DB_COLLECTION2 || 'collection_events';
 
-const Event = model('Event', eventSchema, collectionName);
+export class GetEventByIdController {
+    private eventService: EventService;
 
-class getEventByIdController {
+    constructor(eventService: EventService) {
+        this.eventService = eventService;
+    }
+
     async getEventById(req: Request, res: Response): Promise<Response> {
         const eventId = req.params.id;
 
-        if (!eventId || typeof eventId !== 'string') {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid data supplied.' });
-        }
-
         try {
-            const event = await Event.findById(eventId);
-            if (!event) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
+            const event = await this.eventService.getEventById(eventId);
+            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', event });
+        } catch (error : any) {
+        
+            if (error.message === 'Invalid data supplied.') {
+
+                return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+
+            } else if (error.message === 'Event not found.') {
+
+                return res.status(StatusCodes.NOT_FOUND).json({ message: error.message });
+                
+            } else {
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
             }
-
-            const responseBody = {
-                id: event._id,
-                description: event.description,
-                dayOfWeek: event.dayOfWeek,
-                userId: event.userId,
-            };
-
-            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', event: responseBody });
-        } catch (error) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
         }
     }
 }
 
-export const getEventByIdInstance = new getEventByIdController();
+export const getEventByIdInstance = new GetEventByIdController(new EventService());
