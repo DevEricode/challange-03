@@ -14,26 +14,28 @@ const validateJWT = (req: AuthenticatedRequest, res: Response, next: NextFunctio
 
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, process.env.SECRET as string, (err, decoded) => {
-        if (err) {
-            if (err.name === 'TokenExpiredError') {
-                return res.status(401).json({ auth: false, message: 'Token expired.' });
-            } else if (err.name === 'JsonWebTokenError') {
-                return res.status(401).json({ auth: false, message: 'Invalid token.' });
-            } else {
-                return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
-            }
-        }
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET as string) as JwtPayload;
 
-        const jwtPayload = decoded as JwtPayload;
+        req.userId = decoded.userId;
 
-        if (jwtPayload) {
-            req.userId = jwtPayload.id;
-            next();
+        next();
+        
+    } catch (error) {
+
+        if (error instanceof jwt.TokenExpiredError) {
+
+            return res.status(401).json({ auth: false, message: 'Token expired.' });
+
+        } else if (error instanceof jwt.JsonWebTokenError) {
+
+            return res.status(401).json({ auth: false, message: 'Invalid token.' });
+
         } else {
-            return res.status(500).json({ auth: false, message: 'Failed to decode token.' });
+
+            return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
         }
-    });
+    }
 };
 
 export default validateJWT;
