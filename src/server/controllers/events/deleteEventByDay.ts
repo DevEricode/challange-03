@@ -18,10 +18,10 @@ class deleteEventsByDayController {
         try {
             const events = await Event.deleteMany({ dayOfWeek });
             if (events.deletedCount === 0) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
+                return res.status(StatusCodes.NOT_FOUND).json({ message: 'Events not found.' });
             }
 
-            return res.status(StatusCodes.OK).json({ message: 'Event deleted successfully.' });
+            return res.status(StatusCodes.OK).json({ message: 'Events deleted successfully.' });
         } catch (error) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
         }
