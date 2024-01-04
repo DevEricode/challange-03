@@ -1,50 +1,48 @@
+// signIn.controller.ts
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { model } from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import userSchema from '../../shared/models/userSchema';
+import { UserService } from '../../shared/services/users/signInService';
 
-const collectionName = process.env.DB_COLLECTION1 || 'collection_users';
+interface RequestWithUser extends Request {
+    userId?: string;
+};
 
-const User = model('User', userSchema, collectionName);
+export class SignInController {
+    private userService: UserService;
 
-class SignInController {
-    async signIn(req: Request, res: Response): Promise<Response> {
-        try {
-            const { email, password } = req.body;
+    constructor(userService: UserService) {
+        this.userService = userService;
+    };
 
-            if (!password) {
-                return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password is required' });
-            }
+    async signIn(req: RequestWithUser, res: Response): Promise<Response> {
+        const { email, password } = req.body;
 
-            const user = await User.findOne({ email });
+        if (!password) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password is required' });
+        };
 
-            if (!user) {
-                return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
-            }
+        const user = await this.userService.getUserByEmail(email);
 
-            if (!user.password) {
-                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login' });
-            }
+        if (!user) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
+        };
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-
-            if (!isPasswordValid) {
-                return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
-            }
-
-            const token = jwt.sign({ userId: user._id }, process.env.SECRET as string, {
-                expiresIn: '4w',
-            });
-
-            res.header('Authorization', `Bearer ${token}`);
-
-            return res.status(StatusCodes.OK).json({ message: 'Login successful' });
-        } catch (error) {
+        if (!user.password) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login' });
-        }
-    }
-}
+        };
 
-export const signInControllerInstance = new SignInController();
+        const isPasswordValid = await this.userService.validatePassword(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
+        };
+
+        const token = this.userService.generateToken(user._id);
+
+        res.header('Authorization', `Bearer ${token}`);
+
+        return res.status(StatusCodes.OK).json({ message: 'Login successful' });
+    };
+};
+
+export const signInControllerInstance = new SignInController(new UserService());

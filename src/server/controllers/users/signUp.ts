@@ -1,51 +1,34 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import userSchema from '../../shared/models/userSchema';
-import { ObjectId } from 'mongodb';
-import bcrypt from 'bcrypt';
-import { model } from 'mongoose';
-import 'dotenv/config';
+import { UserService } from '../../shared/services/users/signUpService';
 
-const collectionName = process.env.DB_COLLECTION1 || 'collection_users';
+export class SignUpController {
+    private userService: UserService;
 
-const User = model('User', userSchema, collectionName);
+    constructor(userService: UserService) {
+        this.userService = userService;
+    };
 
-class SignUpController {
     async signUp(req: Request, res: Response): Promise<Response> {
         const userData = req.body;
-        userData.email = userData.email.toLowerCase();
-
-        const newUser = new User({
-            ...userData,
-            _id: new ObjectId(),
-        });
 
         try {
-            await newUser.validate();
-        } catch (error) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid Input.', details: error });
-        }
+            const newUser = await this.userService.createUser(userData);
 
-        try {
-            const emailExists = await User.findOne({ email: userData.email });
-            
-            if (emailExists) {
+            if (await this.userService.checkEmailExists(userData.email)) {
                 return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Email already in use.' });
-            }
+            };
 
-            const hashedPassword = await bcrypt.hash(userData.password, 10);
-            newUser.password = hashedPassword;
+            newUser.password = await this.userService.hashPassword(userData.password);
+            newUser.confirmPassword = await this.userService.hashPassword(userData.confirmPassword);
 
-            const hashedConfirmPassword = await bcrypt.hash(userData.confirmPassword, 10);
-            newUser.confirmPassword = hashedConfirmPassword;
-
-            await newUser.save();
+            await this.userService.saveUser(newUser);
 
             return res.status(StatusCodes.CREATED).json({ message: 'User created.' });
         } catch (error) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
-        }
-    }
-}
+        };
+    };
+};
 
-export const signUpControllerInstance = new SignUpController();
+export const signUpControllerInstance = new SignUpController(new UserService());
