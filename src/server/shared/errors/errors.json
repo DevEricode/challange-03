@@ -23,6 +23,18 @@
             "message": "Invalid id format.",
             "type": "controller validation",
             "http_code": 400
+        },
+        {
+            "code": 5,
+            "message": "You must be logged.",
+            "type": "controller validation",
+            "http_code": 401
+        },
+        {
+            "code": 6,
+            "message": "Event not found.",
+            "type": "controller validation",
+            "http_code": 204
         }
     ]
 }
