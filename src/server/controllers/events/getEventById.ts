@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { EventService } from '../../shared/services/getEventByIdService';
+import { EventService } from '../../shared/services/events/getEventByIdService';
 
 
 export class GetEventByIdController {
@@ -8,7 +8,7 @@ export class GetEventByIdController {
 
     constructor(eventService: EventService) {
         this.eventService = eventService;
-    }
+    };
 
     async getEventById(req: Request, res: Response): Promise<Response> {
         const eventId = req.params.id;
@@ -28,9 +28,9 @@ export class GetEventByIdController {
                 
             } else {
                 return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};
 
 export const getEventByIdInstance = new GetEventByIdController(new EventService());
