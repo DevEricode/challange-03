@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { createEventsInstance } from './createEvent';
-import { getEventsByDayInstance } from './getEventsByDay';
+import { getEventsByDaysInstance } from './getEventsByDay';
 import { getEventByIdInstance } from './getEventById';
-import { deleteEventByIdInstance } from './deleteEventId';
+import { deleteEventByIdInstance } from './deleteEventById';
 import { deleteEventsByDayInstance } from './deleteEventByDay';
 
 class EventsController {
@@ -12,7 +12,7 @@ class EventsController {
     }
 
     getEventsByDay(req: Request, res: Response): void {
-        getEventsByDayInstance.getEventsByDay(req, res);
+        getEventsByDaysInstance.getEventsByDay(req, res);
     }
 
     getEventById(req: Request, res: Response): void {
