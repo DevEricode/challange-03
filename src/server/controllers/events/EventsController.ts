@@ -7,24 +7,24 @@ import { deleteEventsByDayInstance } from './deleteEventByDay';
 
 class EventsController {
 
-    createEvent(req: Request, res: Response): void {
-        createEventsInstance.createEvent(req, res);
+    async createEvent(req: Request, res: Response) {
+        return await createEventsInstance.createEvent(req, res);
     }
 
-    getEventsByDay(req: Request, res: Response): void {
-        getEventsByDaysInstance.getEventsByDay(req, res);
+    async getEventsByDay(req: Request, res: Response) {
+        return  await getEventsByDaysInstance.getEventsByDay(req, res);
     }
 
-    getEventById(req: Request, res: Response): void {
-        getEventByIdInstance.getEventById(req, res);
+    async getEventById(req: Request, res: Response) {
+        return await getEventByIdInstance.getEventById(req, res);
     }
 
-    deleteEventId(req: Request, res: Response): void {
-        deleteEventByIdInstance.deleteEventById(req, res);
+    async deleteEventId(req: Request, res: Response) {
+        return await deleteEventByIdInstance.deleteEventById(req, res);
     }
 
-    deleteEventByDay(req: Request, res: Response): void {
-        deleteEventsByDayInstance.deleteEventsByDay(req, res);
+    async deleteEventByDay(req: Request, res: Response) {
+        return await deleteEventsByDayInstance.deleteEventsByDay(req, res);
     }
 }
 

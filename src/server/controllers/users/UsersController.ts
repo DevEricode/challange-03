@@ -3,12 +3,12 @@ import { signInControllerInstance } from './signIn';
 import { signUpControllerInstance } from './signUp';
 
 class UsersController {
-    signIn(req: Request, res: Response): void {
-        signInControllerInstance.signIn(req, res);
+    async signIn(req: Request, res: Response) {
+        return await signInControllerInstance.signIn(req, res);
     }
 
-    signUp(req: Request, res: Response): void {
-        signUpControllerInstance.signUp(req, res);
+    async signUp(req: Request, res: Response) {
+        return await signUpControllerInstance.signUp(req, res);
     }
 }
 

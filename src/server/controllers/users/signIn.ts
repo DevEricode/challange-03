@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '../../shared/services/users/signInService';
+import throwErr from '../../shared/errors/handleError';
 
 interface RequestWithUser extends Request {
     userId?: string;
@@ -18,23 +19,23 @@ export class SignInController {
         const { email, password } = req.body;
 
         if (!password) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password is required' });
+            throwErr(9);
         };
 
         const user = await this.userService.getUserByEmail(email);
 
         if (!user) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
+            throwErr(10);
         };
 
         if (!user.password) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login' });
+            throwErr(11);
         };
 
         const isPasswordValid = await this.userService.validatePassword(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid credentials' });
+            throwErr(10);
         };
 
         const token = this.userService.generateToken(user._id);

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { EventService } from '../../shared/services/events/deleteEventsByDayService';
+import throwErr from '../../shared/errors/handleError';
 
 interface RequestWithQuery extends Request {
     query: {
@@ -19,19 +20,13 @@ export class DeleteEventsByDayController {
         const { dayOfWeek } = req.query;
 
         if (!dayOfWeek || typeof dayOfWeek !== 'string') {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid data supplied.' });
+            throwErr(8);
         };
 
-        try {
+        const deletedEvents = await this.eventService.deleteEventsByDay(dayOfWeek);
 
-            const deletedEvents = await this.eventService.deleteEventsByDay(dayOfWeek);
+        return res.status(StatusCodes.OK).json(deletedEvents);
 
-            return res.status(StatusCodes.OK).json(deletedEvents);
-
-        } catch (error) {
-            
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.', details: error });
-        };
     };
 };
 

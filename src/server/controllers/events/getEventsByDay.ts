@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { EventService } from '../../shared/services/events/getEventsByDayService';
+import throwErr from '../../shared/errors/handleError';
 
 class GetEventsByDayController {
     eventService: EventService;
@@ -13,20 +14,17 @@ class GetEventsByDayController {
         const dayOfWeek = req.query.dayOfWeek;
 
         if (!dayOfWeek || typeof dayOfWeek !== 'string') {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid data supplied.' });
+            throwErr(8);
         };
 
-        try {
-            const events = await this.eventService.getEventsByDay(dayOfWeek);
-            if (events.length === 0) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message: 'Event not found.' });
-            }
 
-            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', events });
+        const events = await this.eventService.getEventsByDay(dayOfWeek);
+        if (events.length === 0) {
+            throwErr(6);
+        }
+
+        return res.status(StatusCodes.OK).json({ message: 'Successful operation.', events });
             
-        } catch (error) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
-        };
     };
 };
 

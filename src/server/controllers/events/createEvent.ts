@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { EventService } from '../../shared/services/events/createEventService';
+import throwErr from '../../shared/errors/handleError';
 
 interface RequestWithUser extends Request {
     userId?: string;
@@ -17,15 +18,14 @@ export class CreateEventController {
         const eventData = req.body;
 
         if (!req.userId) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'userId is required.' });
+            throwErr(5);
         };
 
-        try {
-            const newEvent = await this.eventService.createEvent(eventData, req.userId);
-            return res.status(StatusCodes.OK).json({ message: 'Successful operation.', event: newEvent });
-        } catch (error) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.', details: error });
-        };
+
+        const newEvent = await this.eventService.createEvent(eventData, req.userId);
+
+        return res.status(StatusCodes.OK).json({ message: 'Successful operation.', event: newEvent });
+
     };
 };
 

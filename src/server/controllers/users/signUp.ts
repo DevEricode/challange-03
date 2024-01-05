@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '../../shared/services/users/signUpService';
+import throwErr from '../../shared/errors/handleError';
 
 export class SignUpController {
     private userService: UserService;
@@ -12,22 +13,23 @@ export class SignUpController {
     async signUp(req: Request, res: Response): Promise<Response> {
         const userData = req.body;
 
-        try {
-            const newUser = await this.userService.createUser(userData);
 
-            if (await this.userService.checkEmailExists(userData.email)) {
-                return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Email already in use.' });
-            };
+        const newUser = await this.userService.createUser(userData);
 
-            newUser.password = await this.userService.hashPassword(userData.password);
-            newUser.confirmPassword = await this.userService.hashPassword(userData.confirmPassword);
+        if (await this.userService.checkEmailExists(userData.email)) {
 
-            await this.userService.saveUser(newUser);
+            throwErr(7);
 
-            return res.status(StatusCodes.CREATED).json({ message: 'User created.' });
-        } catch (error) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred.' });
         };
+
+        newUser.password = await this.userService.hashPassword(userData.password);
+        
+        newUser.confirmPassword = await this.userService.hashPassword(userData.confirmPassword);
+
+        await this.userService.saveUser(newUser);
+
+        return res.status(StatusCodes.CREATED).json({ message: 'User created.' });
+
     };
 };
 
