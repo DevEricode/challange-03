@@ -8,21 +8,19 @@ import { createEvent } from '../shared/validation/events/eventValidation';
 import validateJWT from '../shared/middleware/userIsAuthorized';
 
 
-
-
 const router = Router();
 
 router.get('/', (req, res) => {
     return res.status(StatusCodes.ACCEPTED).send('Teste!');
 });
 
-router.post('/users/sign-in',usersController.signIn);
-router.post('/users/sign-up',validateSchemas(createUser), usersController.signUp);
+router.post('/api/v1/users/sign-in',usersController.signIn);
+router.post('/api/v1/users/sign-up',validateSchemas(createUser), usersController.signUp);
 
-router.post('/events', validateJWT,validateSchemas(createEvent), eventsController.createEvent);
-router.get('/events/', validateJWT,eventsController.getEventsByDay);
-router.get('/events/:id', validateJWT,eventsController.getEventById);
-router.delete('/events/', validateJWT,eventsController.deleteEventByDay);
-router.delete('/events/:id', validateJWT,eventsController.deleteEventId);
+router.post('/api/v1/events', validateJWT,validateSchemas(createEvent), eventsController.createEvent);
+router.get('/api/v1/events/', validateJWT,eventsController.getEventsByDay);
+router.get('/api/v1/events/:id', validateJWT,eventsController.getEventById);
+router.delete('/api/v1/events/', validateJWT,eventsController.deleteEventByDay);
+router.delete('/api/v1/events/:id', validateJWT,eventsController.deleteEventId);
 
 export { router };
