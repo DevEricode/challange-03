@@ -1,28 +1,29 @@
 <p align="center">
-  <img src="https://cdn.pluo.jobs/media/logos/2021-11-05_19-02_logo.png" alt="Logo Compasso UOL" width="200">
+  <img src="https://cdn.pluo.jobs/media/logos/2021-11-05_19-02_logo.png" alt="Compasso UOL Logo" width="200">
 </p>
 
+# Compass Challenge - Backend Scholarship Program with Node.js.
 
-# Desafio Compass - Programa de Bolsas Backend com Node.js.
+## About the Project:
 
-## Sobre o Projeto:
-
-O terceiro desafio do programa de bolsas da Compass visa aplicar os conhecimentos adquiridos durante três meses de formação em Backend com Node.js. O projeto abrange conceitos fundamentais do mundo backend, como:
+The third challenge of Compass's scholarship program aims to apply the knowledge acquired during three months of Backend training with Node.js. The project covers fundamental backend concepts such as:
 
 * Endpoints.
 * Controllers.
-* Banco de dados NoSQL.
-* Controle de usuário com e-mail e senha.
-* Criptografia de senha.
-* Login de usuários.
-* Geração e utilização de tokens JWT.
-* Validação minuciosa de dados nas entradas dos endpoints.
-* Paginação de consultas.
-* Filtros de consultas.
-* Testes de código para garantir qualidade das entregas
-* Boas práticas de código, incluindo conceitos do clean code.
+* NoSQL Database.
+* User control with email and password.
+* Password encryption.
+* User login.
+* JWT token generation and usage.
+* Thorough data validation in endpoint inputs.
+* Query pagination.
+* Query filters.
+* Error handling.
+* Custom errors.
+* Code testing to ensure delivery quality.
+* Code best practices, including clean code concepts.
 
-## Tecnologias Utilizadas:
+## Used Technologies:
 
 * [NodeJS](https://nodejs.org/)
 * [Typescript](https://www.typescriptlang.org/)
@@ -33,7 +34,7 @@ O terceiro desafio do programa de bolsas da Compass visa aplicar os conhecimento
 * [ESlint](https://eslint.org/)
 * [Prettier](https://prettier.io/)
 
-## Dependências do Projeto:
+## Project Dependencies:
 
     "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
@@ -63,26 +64,26 @@ O terceiro desafio do programa de bolsas da Compass visa aplicar os conhecimento
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
 
-## Rotas Utilizadas:
+## Used Routes:
 
 ### Users
 
-| Método   | Rota                      |
-|----------|---------------------------|
-| POST     | /api/v1/users/sign-in     |
-| POST     | /api/v1/users/sign-up     |
+| Method   | Route                    |
+|----------|--------------------------|
+| POST     | /api/v1/users/sign-in   |
+| POST     | /api/v1/users/sign-up   |
 
-#### Events
+### Events
 
-| Método   | Rota                      |
-|----------|---------------------------|
-| POST     | /api/v1/events/           |
-| GET      | /api/v1/events/           |
-| GET      | /api/v1/events/:id        |
-| DELETE   | /api/v1/events/           |
-| DELETE   | /api/v1/events/:id        |
+| Method   | Route                    |
+|----------|--------------------------|
+| POST     | /api/v1/events/         |
+| GET      | /api/v1/events/         |
+| GET      | /api/v1/events/:id      |
+| DELETE   | /api/v1/events/         |
+| DELETE   | /api/v1/events/:id      |
 
-## Scripts Utilizados:
+## Used Scripts:
 
     "start": "ts-node-dev ./src/index.ts",
     "production": "node ./build/index.js",
@@ -92,43 +93,43 @@ O terceiro desafio do programa de bolsas da Compass visa aplicar os conhecimento
     "lint:fix": "eslint . --ext .ts --fix",
     "lint:watch": "eslint . --ext .ts --fix --watch"
 
-## Como Rodar:
+## How to Run:
 
-Para executar o projeto, é necessário ter o Node.js instalado no computador. Para instalá-lo, basta clicar no link abaixo.
+To run the project, it is necessary to have Node.js installed on the computer. To install it, just click on the link below.
 
-* [Clique aqui](https://nodejs.org/)
+* [Click here](https://nodejs.org/)
 
-### Instalação do Yarn:
+### Yarn Installation:
 
-A instalação do Yarn é feita por meio do NPM.
+Yarn installation is done through NPM.
 
     npm install -g yarn
 
-### Clonar o Repositório:
+### Clone the Repository:
 
     git clone <https://github.com/DevEricode/challange-03.git>
 
-### Instalar as Dependências:
+### Install Dependencies:
 
     cd challange-03
     yarn install
 
-### Configurar as Variáveis de Ambiente:
+### Set Environment Variables:
 
-Crie o arquivo .env na pasta raiz do projeto e insira o seguinte conteúdo:
+Create the .env file in the project's root folder and insert the following content:
 
     PORT=8000
-    URI=Senha_do_banco_de_dados
-    DB_NAME1=Nome1
-    DB_COLLECTION1=Nome1
-    DB_NAME2=Nome2
-    DB_COLLECTION2=Nome2
-    SECRET=Sua_string_qualquer
+    URI=Database_password
+    DB_NAME1=Name1
+    DB_COLLECTION1=Name1
+    DB_NAME2=Name2
+    DB_COLLECTION2=Name2
+    SECRET=Your_random_string
 
-### Rodar o Projeto:
+### Run the Project:
 
     yarn start
 
-### Rodar os Testes:
+### Run Tests:
 
     yarn test
