@@ -68,20 +68,21 @@ The third challenge of Compass's scholarship program aims to apply the knowledge
 
 ### Users
 
-| Method   | Route                    |
-|----------|--------------------------|
-| POST     | /api/v1/users/sign-in   |
-| POST     | /api/v1/users/sign-up   |
+| Method   | Route                   | Functionality    |
+|----------|-------------------------|------------------|
+| POST     | /api/v1/users/sign-in   | Log In.          |
+| POST     | /api/v1/users/sign-up   | Create a user.   |
 
 ### Events
 
-| Method   | Route                    |
-|----------|--------------------------|
-| POST     | /api/v1/events/         |
-| GET      | /api/v1/events/         |
-| GET      | /api/v1/events/:id      |
-| DELETE   | /api/v1/events/         |
-| DELETE   | /api/v1/events/:id      |
+| Method   | Route                    | Functionality                      |
+|----------|--------------------------|------------------------------------|
+| POST     | /api/v1/events/          | Create a event.                    |
+| GET      | /api/v1/events/          | Get an event by day of the week.   |
+| GET      | /api/v1/events/:id       | Get an event by id.                |
+| DELETE   | /api/v1/events/          | Delete an event by day of the week.|
+| DELETE   | /api/v1/events/:id       | Delete an event by id.             |
+
 
 ## Used Scripts:
 
